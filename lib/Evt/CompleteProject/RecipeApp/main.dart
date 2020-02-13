@@ -96,7 +96,13 @@ class _AppHomePageState extends State<AppHomePage> {
                 return Container(
                   child: InkWell(
                     onTap: (){
-                      debugPrint("the title is "+modelclass[index].gettitle());
+                      setState(() {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return SecondPage(this.modelclass,appbartitle: modelclass[index].gettitle(),ingirdientlist: modelclass[index].getingridients(),modelindexed: modelclass[index],preparationlist: modelclass[index].getsteps(),);
+                          }
+                        ));
+                      });
                     },
                                       child: Card(
                       elevation: 6.0,
