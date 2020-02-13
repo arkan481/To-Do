@@ -82,7 +82,7 @@ class _loginpagestate extends State<loginpage> {
                         if (usernamecontroller.text==dummyusername&&passwordcontroller.text==dummypass) {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context){
-                              return apphomepage(usernamecontroller.text);
+                              return apphomepage( usernamecontroller.text,);
                             }
                           ));
                         debugPrint("Login Successful");

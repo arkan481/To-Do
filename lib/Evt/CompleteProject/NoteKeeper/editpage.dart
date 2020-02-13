@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:lastone/Evt/CompleteProject/NoteKeeper/atomic.dart';
-import 'package:lastone/Evt/CompleteProject/NoteKeeper/editpage.dart';
-import 'homepage.dart';
+import 'package:lastone/Evt/CompleteProject/NoteKeeper/newtaskpage.dart';
 
-class newtask extends StatefulWidget {
+
+class editpage extends StatefulWidget {
   var ahpobj;
-  int pagechanged;
-  List<cardpageview>pageviewlist;
-  List<editpage>editpagelist;
-  newtask(this.pageviewlist,this.editpagelist,this.ahpobj);
+   List<cardpageview>pageviewlist;
+  List<TextEditingController>listtilecontroller;
+   List<Widget> listobj;
+  editpage(this.listobj,this.listtilecontroller,this.pageviewlist,this.ahpobj);
   @override
-  _newtaskState createState() => _newtaskState(this.pageviewlist,this.editpagelist,this.ahpobj);
+  _editpageState createState() => _editpageState(this.listobj,this.listtilecontroller,this.pageviewlist,this.ahpobj);
 }
 
-class _newtaskState extends State<newtask> {
+class _editpageState extends State<editpage> {
   var ahpobj;
-  List<editpage>editpagelist;
   List<cardpageview>pageviewlist;
-  _newtaskState(this.pageviewlist,this.editpagelist,this.ahpobj);
+  List<TextEditingController>listtilecontroller;
+  List<Widget> listobj;
+  _editpageState(this.listobj,this.listtilecontroller,this.pageviewlist,this.ahpobj);
   String title="New Task";
-   TextEditingController titlecontroller = new TextEditingController();
-  int intforlist =0;
-  var intforpageview=0;
-  List<listtile> listobj = new List();
-  @override
+  TextEditingController titlecontroller = new TextEditingController();
   
+  int intfortemp;
+  var intforpageview=0;
+  @override
   Widget build(BuildContext context) {
+    debugPrint("the page change "+ahpobj.getpagechanged().toString());
+    debugPrint("iam the list "+pageviewlist.length.toString());
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       floatingActionButton: Row(
@@ -44,10 +47,9 @@ class _newtaskState extends State<newtask> {
             heroTag: "Hero2",
             onPressed: (){
               setState(() {
-               listtilecontroller.insert(intforlist,TextEditingController());
-               listobj.insert(intforlist,listtile(listtilecontroller[intforlist]));
-               intforlist++;
-               debugPrint(intforlist.toString());
+               listtilecontroller.insert(listobj.length,TextEditingController());
+               listobj.insert(listobj.length,listtile(listtilecontroller[listobj.length]));
+               debugPrint("after + "+listobj.length.toString());
               });
             },
             backgroundColor: Colors.blue,
@@ -62,16 +64,19 @@ class _newtaskState extends State<newtask> {
             child: Icon(Icons.done,size: 30.0,),
             onTap: (){
               setState(() {
+                //here page changed
                 if (pageviewlist.length==0) {
-                  debugPrint("pv "+pageviewlist.length.toString());
-                  pageviewlist.insert(0,new cardpageview(titlecontroller.text,listobj,this.ahpobj));
-                  editpagelist.insert(0,new editpage(listobj,this.listtilecontroller,this.pageviewlist,this.ahpobj));
+                  pageviewlist.insert(0,cardpageview("taskname",this.listobj, ahpobj));
                 }else {
-                  pageviewlist.insert(pageviewlist.length,new cardpageview(titlecontroller.text,listobj,this.ahpobj));
-                  editpagelist.insert(editpagelist.length,new editpage(listobj,this.listtilecontroller,this.pageviewlist,this.ahpobj));
+                  pageviewlist.insert(ahpobj.getpagechanged()+1,cardpageview(titlecontroller.text,this.listobj, ahpobj));
                 }
-                Navigator.pop(context);
               });
+              // setState(() {
+              //   pageviewlist.insert(1,cardpageview(titlecontroller.text,this.listobj,ahpobj));
+            
+              // });
+                  ahpobj.setremoved(0);
+                Navigator.pop(context);
             },
           ),
         )
@@ -145,113 +150,17 @@ class _newtaskState extends State<newtask> {
       ),
     );
   }
-  List<TextEditingController>listtilecontroller=new List();
   void deletelist(){
     setState(() {
-       intforlist--;
-      listobj.removeAt(intforlist);
-      debugPrint(intforlist.toString());
+      if (listobj.length==0) {
+      }else {
+      listobj.removeAt(listobj.length-1);
+      listtilecontroller.removeAt(listtilecontroller.length-1);
+      debugPrint(listobj.length.toString());
+      debugPrint(listtilecontroller.length.toString());
+      }
+     
     });
    
   }
-}
-
-class listtile extends StatefulWidget {
-
-  TextEditingController controller;
-  listtile(this.controller);
-  @override
-  _listtileState createState() => _listtileState(this.controller);
-  void turngreen(){}
-}
-
-class _listtileState extends State<listtile> {
-  int red=0;
-int blue=0;
-static int orange=0;
-
-  Container value;
-  TextEditingController controller;
-  _listtileState(this.controller);
-  var abc = [
-    Container(
-      height: 20.0,
-      width: 20.0,
-      child: Text(""),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.orange
-      ),
-    ),
-    Container(
-      height: 20.0,
-      width: 20.0,
-      child: Text(""),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.blue
-      ),
-    ),
-    Container(
-      height: 20.0,
-      width: 20.0,
-      child: Text(""),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.red
-      ),
-    ),
-  ];
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ListTile(
-        title: TextField(
-          controller: this.controller,
-          decoration: InputDecoration(
-            labelStyle: TextStyle(color: Colors.grey,fontSize: 11.0),
-            labelText: "Input your task here...",
-            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey))
-          ),
-          cursorColor: Colors.black,
-          style: TextStyle(color: Colors.black,fontSize: 13.0),
-          onSubmitted: (String){
-            setState(() {
-              debugPrint(controller.text);
-            });
-          },
-        ),
-        // leading: InkWell(
-        //   onTap: (){
-        //     setState(() {
-        //       obj.deletelist();
-        //     });
-        //   },
-        //   child: Icon(Icons.delete_sweep,color: Colors.black,),
-        // ),
-        trailing: DropdownButton<Container>(
-          key: new Key(""),
-          iconEnabledColor: Colors.grey,
-         // hint: Text("Priority",style: TextStyle(color: Colors.black,fontSize: 14.0),),
-          items: abc.map((Container ok){
-            return DropdownMenuItem<Container>(
-              child: ok,
-              value: ok,
-            );
-          }).toList(),
-          onChanged: (Container k){
-            setState(() {
-              if (k==abc[0]) {
-                orange++;
-                debugPrint(orange.toString());
-              }
-              value=k;
-            });
-          },
-           value: value,
-        )
-      ),
-    );
-  }
-  void turngreen(){}
 }

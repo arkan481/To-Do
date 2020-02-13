@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lastone/Evt/CompleteProject/NoteKeeper/homepage.dart';
 
 
 String appfont = "anton"; // app default font
@@ -27,17 +28,19 @@ Container logsigncon ({Widget child,double height,double width}) { //Rounded Box
 }
 
 class cardpageview extends StatefulWidget {
+  var ahpobj;
    String taskname;
    List<Widget>tile;
-   cardpageview(this.taskname,this.tile);
+   cardpageview(this.taskname,this.tile,this.ahpobj);
   @override
-  _cardpageviewState createState() => _cardpageviewState(this.taskname,this.tile);
+  _cardpageviewState createState() => _cardpageviewState(this.taskname,this.tile,this.ahpobj);
 }
 
 class _cardpageviewState extends State<cardpageview> {
+  var ahpobj;
   String taskname;
    List<Widget>tile;
-   _cardpageviewState(this.taskname,this.tile);
+   _cardpageviewState(this.taskname,this.tile,this.ahpobj);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -74,12 +77,22 @@ class _cardpageviewState extends State<cardpageview> {
           Container(
             margin: EdgeInsets.only(top: 20.0),
             width: 400.0,
-            height: 551.4,
+            height: 185.0,
             child: ListView.builder(
               itemCount: tile.length,
               itemBuilder: (context,index){
                 return tile[index];
               },
+            )
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 18.0,left: 5.0),
+            alignment: Alignment.bottomLeft,
+            child: InkWell(
+              onTap: (){
+                ahpobj.deletepageview();
+              },
+              child: Icon(Icons.delete,color: Colors.black,),
             )
           )
         ],
@@ -89,22 +102,21 @@ class _cardpageviewState extends State<cardpageview> {
   }
 }
 
-class scaffoldfor extends StatelessWidget {
-  Widget body;
-  scaffoldfor(this.body);
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      backgroundColor: Colors.white70,
-      appBar: AppBar(backgroundColor: Colors.blue,),
-      body: Column(
-        children: <Widget>[
-          body
-        ],
-      ),
-    );
-  }
-}
-
+// class scaffoldfor extends StatelessWidget {
+//   Widget body;
+//   scaffoldfor(this.body);
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     return Scaffold(
+//       resizeToAvoidBottomPadding: false,
+//       backgroundColor: Colors.white70,
+//       appBar: AppBar(backgroundColor: Colors.blue,),
+//       body: Column(
+//         children: <Widget>[
+//           body
+//         ],
+//       ),
+//     );
+//   }
+// }

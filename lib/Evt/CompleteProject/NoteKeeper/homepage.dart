@@ -1,11 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lastone/Evt/CompleteProject/NoteKeeper/atomic.dart';
+import 'package:lastone/Evt/CompleteProject/NoteKeeper/editpage.dart';
 import 'package:lastone/Evt/CompleteProject/NoteKeeper/newtaskpage.dart';
 import 'atomic.dart';
 
 class apphomepage extends StatefulWidget {
   String username;
+  _apphomepagestate obj;
   apphomepage(this.username){
   }
   @override
@@ -15,12 +17,23 @@ class apphomepage extends StatefulWidget {
 }
 
 class _apphomepagestate extends State<apphomepage> {
+  
+  int removed=0;
   String username;
-  int pagechanged;
+  int pagechanged=0;
    List<cardpageview>abc=new List();
+   List<editpage>editpagelist=new List();
   _apphomepagestate(this.username){}
   @override
+ 
+  void setremoved(int status) {
+    removed=status;
+  }
+  int getpagechanged() {
+    return pagechanged;
+  }
   Widget build(BuildContext context) {
+    debugPrint("Has removed status: "+ removed.toString());
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       body: Stack(
@@ -70,7 +83,7 @@ class _apphomepagestate extends State<apphomepage> {
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context){
-                            return newtask(abc);
+                            return newtask(abc,this.editpagelist,this);
                           }
                         ));
                       },
@@ -92,11 +105,63 @@ class _apphomepagestate extends State<apphomepage> {
                   onTap: (){
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context){
-                        if (pagechanged==null) {
-                          return scaffoldfor(abc[0]);
+                        if (pagechanged==0) {
+                          if (abc.length==0) {
+                            
+                          }else {
+                            if (removed==1) {
+                              
+                            }else {
+                              debugPrint("0"+"wbm");
+                              abc.removeAt(0);
+                              removed=1;
+                            }
+                            
+                          }
+                          debugPrint("1 called");
+                          return editpagelist[0];
                         }else {
-                          return scaffoldfor(abc[pagechanged]);
+                          if (removed==1) {
+                              
+                            }else {
+                              debugPrint(pagechanged.toString()+" page change will be removed");
+                              abc.removeAt(pagechanged);
+                              removed=1;
+                            }
+                            debugPrint("2 called");
+                          return editpagelist[pagechanged];
                         }
+                      // if (removed==1) {
+                        
+                      // }else {
+                      //   debugPrint("this con");
+                      //   abc.removeAt(1);
+                      //   removed=1;
+                      // }
+                      //   return editpagelist[pagechanged];
+                        // if (pagechanged==0) {
+                        //   if (abc.length==0) {
+                            
+                        //   }else {
+                        //     if (removed==1) {
+                              
+                        //     }else {
+                        //       debugPrint("0 will be removed");
+                        //       abc.removeAt(0);
+                        //       removed=1;
+                        //     }
+                        //     return editpagelist[0];
+                        //   }
+                        // }else {
+                        //   if (abc.length==0) {
+                            
+                        //   }else {
+                        //     debugPrint(pagechanged.toString()+" will be removed");
+                        //     abc.removeAt(pagechanged);
+                        //     removed=1;
+                        //   }
+                        //   return editpagelist[pagechanged];
+                        // }
                       }
                     ));
                   },
@@ -236,5 +301,24 @@ class _apphomepagestate extends State<apphomepage> {
         ],
       )
     );
+  }
+  void deletepageview(){
+    setState(() {
+      abc.removeAt(pagechanged);
+      editpagelist.removeAt(pagechanged);
+    });
+  }
+
+  void delete1() {
+    setState(() {
+      abc.removeAt(pagechanged);
+      debugPrint("deleted");
+    });
+  }
+  void addpageview(String taskname,List<Widget>tile){
+    setState(() {
+      abc.insert(pagechanged,cardpageview(taskname, tile,this));
+      debugPrint("Inserted");
+    });
   }
 }
